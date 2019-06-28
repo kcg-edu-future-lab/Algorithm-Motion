@@ -10,7 +10,7 @@
         <DataTemplate x:Key="PointRowTemplate">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Id, StringFormat=\{0\}:}" Width="50" TextAlignment="Right"/>
-                <TextBlock Text="{Binding Angle, StringFormat=\{0:F3\}}" Width="90" TextAlignment="Right" Margin="0,0,20,0"/>
+                <TextBlock Text="{Binding PreviousSignalTime, StringFormat=\{0:mm:ss.fff\}}" Width="100" TextAlignment="Right" Margin="0,0,20,0"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="PointTemplate">
