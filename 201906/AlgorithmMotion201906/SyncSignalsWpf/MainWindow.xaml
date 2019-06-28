@@ -10,7 +10,7 @@
         <DataTemplate x:Key="PointRowTemplate">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Id, StringFormat=\{0\}:}" Width="50" TextAlignment="Right"/>
-                <TextBlock Text="{Binding PreviousSignalTime, StringFormat=\{0:mm:ss.fff\}}" Width="100" TextAlignment="Right" Margin="0,0,20,0"/>
+                <TextBlock Text="{Binding PreviousSignalTime, StringFormat=\{0:HH:mm:ss.fff\}}" Width="120" TextAlignment="Right" Margin="0,0,20,0"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="PointTemplate">
@@ -24,10 +24,19 @@
                         </TransformGroup>
                     </Ellipse.RenderTransform>
                 </Ellipse>
+                <Ellipse x:Name="SignalCircle" Width="30" Height="30" Fill="#FFFFBB77" RenderTransformOrigin="0.5,0.5" Opacity="0" Loaded="SignalCircle_Loaded">
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform X="180"/>
+                            <RotateTransform Angle="-90"/>
+                            <RotateTransform Angle="{Binding Angle}"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
             </Grid>
         </DataTemplate>
         <ItemsPanelTemplate x:Key="PointsPanelTemplate">
-            <Canvas Height="24" IsItemsHost="True" Width="24"/>
+            <Canvas Height="30" IsItemsHost="True" Width="30"/>
         </ItemsPanelTemplate>
     </Window.Resources>
     <Window.DataContext>
