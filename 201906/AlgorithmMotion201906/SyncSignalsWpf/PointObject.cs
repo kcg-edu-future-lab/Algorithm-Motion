@@ -22,8 +22,8 @@ namespace SyncSignalsWpf
             }
         }
 
-        public DateTime NextThinkingTime { get; set; }
         public DateTime NextSignalTime { get; set; }
+        public DateTime NextThinkingTime { get; set; }
 
         public PointObject(int id, double angle)
         {

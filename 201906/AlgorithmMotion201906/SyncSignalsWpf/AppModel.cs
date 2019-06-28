@@ -9,7 +9,7 @@ namespace SyncSignalsWpf
     {
         const int PointsCount = 12;
         const double SignalInterval = 1.0;
-        const double Fps = 30;
+        const double Fps = 50;
 
         internal static Random Random { get; } = new Random();
 
@@ -22,10 +22,10 @@ namespace SyncSignalsWpf
         public AppModel()
         {
             var now = DateTime.Now;
-            var angleDelta = 360.0 / PointsCount;
+            var angleInterval = 360.0 / PointsCount;
             Points = Enumerable.Range(0, PointsCount)
                 .Select(_ => now.AddSeconds(2 + SignalInterval * Random.NextDouble()))
-                .Select((t, i) => new PointObject(i, i * angleDelta)
+                .Select((t, i) => new PointObject(i, i * angleInterval)
                 {
                     NextSignalTime = t,
                     NextThinkingTime = t.AddSeconds(SignalInterval / 2),
@@ -33,7 +33,11 @@ namespace SyncSignalsWpf
                 .ToArray();
 
             SignalTimes = new OrderedList<PointObject, DateTime>(p => p.NextSignalTime);
+            foreach (var p in Points)
+                SignalTimes.AddForOrder(p);
             ThinkingTimes = new OrderedList<PointObject, DateTime>(p => p.NextThinkingTime);
+            foreach (var p in Points)
+                ThinkingTimes.AddForOrder(p);
 
             FrameTimer = new Timer(UpdateFrame, null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
         }
@@ -41,15 +45,6 @@ namespace SyncSignalsWpf
         void UpdateFrame(object state)
         {
             var now = DateTime.Now;
-
-            var countToThink = ThinkingTimes.TakeWhile(_ => _.key < now).Count();
-            for (var i = 0; i < countToThink; i++)
-            {
-                var point = ThinkingTimes[0].item;
-                ThinkingTimes.RemoveAt(0);
-
-                UpdateThinking(point);
-            }
 
             var countToSignal = SignalTimes.TakeWhile(_ => _.key < now).Count();
             for (var i = 0; i < countToSignal; i++)
@@ -59,14 +54,42 @@ namespace SyncSignalsWpf
 
                 UpdateSignal(point);
             }
-        }
 
-        void UpdateThinking(PointObject p)
-        {
+            var countToThink = ThinkingTimes.TakeWhile(_ => _.key < now).Count();
+            for (var i = 0; i < countToThink; i++)
+            {
+                var point = ThinkingTimes[0].item;
+                ThinkingTimes.RemoveAt(0);
+
+                UpdateThinking(point);
+
+                SignalTimes.AddForOrder(point);
+                ThinkingTimes.AddForOrder(point);
+            }
         }
 
         void UpdateSignal(PointObject p)
         {
+            p.PreviousSignalTime = p.NextSignalTime;
+        }
+
+        void UpdateThinking(PointObject p)
+        {
+            var times = Enumerable.Range(p.Id - 1, 3)
+                .Select(id => Points[(id + PointsCount) % PointsCount].PreviousSignalTime)
+                .ToArray();
+
+            if (times.Any(t => t == DateTime.MinValue))
+            {
+                p.NextSignalTime = p.PreviousSignalTime.AddSeconds(SignalInterval);
+            }
+            else
+            {
+                var average = times.Average(t => t.Ticks);
+                p.NextSignalTime = new DateTime((long)average).AddSeconds(SignalInterval);
+            }
+
+            p.NextThinkingTime = p.NextSignalTime.AddSeconds(SignalInterval / 2);
         }
     }
 }
