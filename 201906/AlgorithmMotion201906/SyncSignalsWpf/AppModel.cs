@@ -14,33 +14,35 @@ namespace SyncSignalsWpf
         internal static Random Random { get; } = new Random();
 
         public PointObject[] Points { get; }
+        OrderedList<PointObject, TimeSpan> SignalTimes;
+        OrderedList<PointObject, TimeSpan> ThinkingTimes;
 
-        OrderedList<PointObject, DateTime> SignalTimes;
-        OrderedList<PointObject, DateTime> ThinkingTimes;
+        public DateTime StartTime { get; }
         Timer FrameTimer;
 
         public AppModel()
         {
-            var now = DateTime.Now;
+            StartTime = DateTime.Now;
+
             var angleInterval = 360.0 / PointsCount;
             Points = Enumerable.Range(0, PointsCount)
-                .Select(_ => now.AddSeconds(1 + SignalInterval * Random.NextDouble()))
+                .Select(_ => TimeSpan.FromSeconds(1 + SignalInterval * Random.NextDouble()))
                 .Select((t, i) => new PointObject(i, i * angleInterval)
                 {
                     NextSignalTime = t,
-                    NextThinkingTime = t.AddSeconds(SignalInterval / 2),
+                    NextThinkingTime = t + TimeSpan.FromSeconds(SignalInterval / 2),
                 })
                 .ToArray();
 
-            SignalTimes = new OrderedList<PointObject, DateTime>(p => p.NextSignalTime, Points);
-            ThinkingTimes = new OrderedList<PointObject, DateTime>(p => p.NextThinkingTime, Points);
+            SignalTimes = new OrderedList<PointObject, TimeSpan>(p => p.NextSignalTime, Points);
+            ThinkingTimes = new OrderedList<PointObject, TimeSpan>(p => p.NextThinkingTime, Points);
 
             FrameTimer = new Timer(UpdateFrame, null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
         }
 
         void UpdateFrame(object state)
         {
-            var now = DateTime.Now;
+            var now = DateTime.Now - StartTime;
 
             var countToSignal = SignalTimes.TakeWhile(_ => _.key < now).Count();
             for (var i = 0; i < countToSignal; i++)
@@ -75,17 +77,17 @@ namespace SyncSignalsWpf
                 .Select(id => Points[(id + PointsCount) % PointsCount].PreviousSignalTime)
                 .ToArray();
 
-            if (times.Any(t => t == DateTime.MinValue))
+            if (times.Any(t => t == TimeSpan.Zero))
             {
-                p.NextSignalTime = p.PreviousSignalTime.AddSeconds(SignalInterval);
+                p.NextSignalTime = p.PreviousSignalTime + TimeSpan.FromSeconds(SignalInterval);
             }
             else
             {
-                var average = times.Average(t => t.Ticks);
-                p.NextSignalTime = new DateTime((long)average).AddSeconds(SignalInterval);
+                var averageTicks = (long)times.Average(t => t.Ticks);
+                p.NextSignalTime = new TimeSpan(averageTicks) + TimeSpan.FromSeconds(SignalInterval);
             }
 
-            p.NextThinkingTime = p.NextSignalTime.AddSeconds(SignalInterval / 2);
+            p.NextThinkingTime = p.NextSignalTime + TimeSpan.FromSeconds(SignalInterval / 2);
         }
     }
 }

@@ -9,9 +9,9 @@ namespace SyncSignalsWpf
         public int Id { get; }
         public double Angle { get; }
 
-        DateTime _PreviousSignalTime;
+        TimeSpan _PreviousSignalTime;
 
-        public DateTime PreviousSignalTime
+        public TimeSpan PreviousSignalTime
         {
             get { return _PreviousSignalTime; }
             set
@@ -22,8 +22,8 @@ namespace SyncSignalsWpf
             }
         }
 
-        public DateTime NextSignalTime { get; set; }
-        public DateTime NextThinkingTime { get; set; }
+        public TimeSpan NextSignalTime { get; set; }
+        public TimeSpan NextThinkingTime { get; set; }
 
         public PointObject(int id, double angle)
         {
@@ -36,6 +36,6 @@ namespace SyncSignalsWpf
         public void NotifyPropertyChanged([CallerMemberName]string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        public override string ToString() => $"{Id}: {PreviousSignalTime:HH:mm:ss.fff}";
+        public override string ToString() => $@"{Id}: {PreviousSignalTime:mm\:ss\.fff}";
     }
 }
