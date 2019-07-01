@@ -8,7 +8,8 @@ namespace SyncSignalsWpf
     public class AppModel
     {
         const int PointsCount = 12;
-        const double SignalInterval = 1.0;
+        static readonly TimeSpan SignalInterval = TimeSpan.FromSeconds(1.0);
+        static readonly TimeSpan ThinkingOffset = TimeSpan.FromSeconds(SignalInterval.TotalSeconds / 2);
         const double Fps = 50;
 
         internal static Random Random { get; } = new Random();
@@ -17,20 +18,18 @@ namespace SyncSignalsWpf
         OrderedList<PointObject, TimeSpan> SignalTimes;
         OrderedList<PointObject, TimeSpan> ThinkingTimes;
 
-        public DateTime StartTime { get; }
+        public DateTime StartTime { get; } = DateTime.Now;
         Timer FrameTimer;
 
         public AppModel()
         {
-            StartTime = DateTime.Now;
-
             var angleInterval = 360.0 / PointsCount;
             Points = Enumerable.Range(0, PointsCount)
-                .Select(_ => TimeSpan.FromSeconds(1 + SignalInterval * Random.NextDouble()))
+                .Select(_ => TimeSpan.FromSeconds(1 + SignalInterval.TotalSeconds * Random.NextDouble()))
                 .Select((t, i) => new PointObject(i, i * angleInterval)
                 {
                     NextSignalTime = t,
-                    NextThinkingTime = t + TimeSpan.FromSeconds(SignalInterval / 2),
+                    NextThinkingTime = t + ThinkingOffset,
                 })
                 .ToArray();
 
@@ -79,15 +78,15 @@ namespace SyncSignalsWpf
 
             if (times.Any(t => t == TimeSpan.Zero))
             {
-                p.NextSignalTime = p.SignalTime + TimeSpan.FromSeconds(SignalInterval);
+                p.NextSignalTime = p.SignalTime + SignalInterval;
             }
             else
             {
                 var averageTicks = (long)times.Average(t => t.Ticks);
-                p.NextSignalTime = new TimeSpan(averageTicks) + TimeSpan.FromSeconds(SignalInterval);
+                p.NextSignalTime = new TimeSpan(averageTicks) + SignalInterval;
             }
 
-            p.NextThinkingTime = p.NextSignalTime + TimeSpan.FromSeconds(SignalInterval / 2);
+            p.NextThinkingTime = p.NextSignalTime + ThinkingOffset;
         }
     }
 }
