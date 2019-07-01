@@ -35,7 +35,7 @@ namespace SyncSignalsWpf
 
             point.PropertyChanged += (o, pe) =>
             {
-                if (pe.PropertyName != nameof(point.PreviousSignalTime)) return;
+                if (pe.PropertyName != nameof(point.SignalTime)) return;
 
                 Dispatcher.InvokeAsync(() =>
                 {

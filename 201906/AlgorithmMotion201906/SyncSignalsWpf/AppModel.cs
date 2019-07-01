@@ -68,18 +68,18 @@ namespace SyncSignalsWpf
 
         void UpdateSignal(PointObject p)
         {
-            p.PreviousSignalTime = p.NextSignalTime;
+            p.SignalTime = p.NextSignalTime;
         }
 
         void UpdateThinking(PointObject p)
         {
             var times = Enumerable.Range(p.Id - 1, 3)
-                .Select(id => Points[(id + PointsCount) % PointsCount].PreviousSignalTime)
+                .Select(id => Points[(id + PointsCount) % PointsCount].SignalTime)
                 .ToArray();
 
             if (times.Any(t => t == TimeSpan.Zero))
             {
-                p.NextSignalTime = p.PreviousSignalTime + TimeSpan.FromSeconds(SignalInterval);
+                p.NextSignalTime = p.SignalTime + TimeSpan.FromSeconds(SignalInterval);
             }
             else
             {
