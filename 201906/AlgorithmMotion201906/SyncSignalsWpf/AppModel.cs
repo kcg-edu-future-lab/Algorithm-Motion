@@ -8,6 +8,7 @@ namespace SyncSignalsWpf
     public class AppModel
     {
         const int PointsCount = 12;
+        const int NeighborsCount = 3;
         static readonly TimeSpan SignalInterval = TimeSpan.FromSeconds(1.0);
         static readonly TimeSpan ThinkingOffset = TimeSpan.FromSeconds(SignalInterval.TotalSeconds / 2);
         const double Fps = 50;
@@ -72,14 +73,18 @@ namespace SyncSignalsWpf
 
         void UpdateThinking(PointObject p)
         {
-            var times = Enumerable.Range(p.Id - 1, 3)
-                .Select(id => Points[(id + PointsCount) % PointsCount].SignalTime)
+            p.NextSignalTime = GetAverageTime(p) + SignalInterval;
+            p.NextThinkingTime = p.NextSignalTime + ThinkingOffset;
+        }
+
+        TimeSpan GetAverageTime(PointObject p)
+        {
+            var times = Enumerable.Range(p.Id - NeighborsCount / 2 + PointsCount, NeighborsCount)
+                .Select(id => Points[id % PointsCount].SignalTime)
                 .ToArray();
-            var average = times.Any(t => t == TimeSpan.Zero) ?
+            return times.Any(t => t == TimeSpan.Zero) ?
                 p.SignalTime :
                 new TimeSpan((long)times.Average(t => t.Ticks));
-            p.NextSignalTime = average + SignalInterval;
-            p.NextThinkingTime = p.NextSignalTime + ThinkingOffset;
         }
     }
 }
