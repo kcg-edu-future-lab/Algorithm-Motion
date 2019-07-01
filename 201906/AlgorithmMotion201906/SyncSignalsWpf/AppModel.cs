@@ -75,17 +75,10 @@ namespace SyncSignalsWpf
             var times = Enumerable.Range(p.Id - 1, 3)
                 .Select(id => Points[(id + PointsCount) % PointsCount].SignalTime)
                 .ToArray();
-
-            if (times.Any(t => t == TimeSpan.Zero))
-            {
-                p.NextSignalTime = p.SignalTime + SignalInterval;
-            }
-            else
-            {
-                var averageTicks = (long)times.Average(t => t.Ticks);
-                p.NextSignalTime = new TimeSpan(averageTicks) + SignalInterval;
-            }
-
+            var average = times.Any(t => t == TimeSpan.Zero) ?
+                p.SignalTime :
+                new TimeSpan((long)times.Average(t => t.Ticks));
+            p.NextSignalTime = average + SignalInterval;
             p.NextThinkingTime = p.NextSignalTime + ThinkingOffset;
         }
     }
