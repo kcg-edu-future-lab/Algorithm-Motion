@@ -24,7 +24,7 @@ namespace SyncSignalsWpf
             var now = DateTime.Now;
             var angleInterval = 360.0 / PointsCount;
             Points = Enumerable.Range(0, PointsCount)
-                .Select(_ => now.AddSeconds(2 + SignalInterval * Random.NextDouble()))
+                .Select(_ => now.AddSeconds(1 + SignalInterval * Random.NextDouble()))
                 .Select((t, i) => new PointObject(i, i * angleInterval)
                 {
                     NextSignalTime = t,
@@ -32,12 +32,8 @@ namespace SyncSignalsWpf
                 })
                 .ToArray();
 
-            SignalTimes = new OrderedList<PointObject, DateTime>(p => p.NextSignalTime);
-            foreach (var p in Points)
-                SignalTimes.AddForOrder(p);
-            ThinkingTimes = new OrderedList<PointObject, DateTime>(p => p.NextThinkingTime);
-            foreach (var p in Points)
-                ThinkingTimes.AddForOrder(p);
+            SignalTimes = new OrderedList<PointObject, DateTime>(p => p.NextSignalTime, Points);
+            ThinkingTimes = new OrderedList<PointObject, DateTime>(p => p.NextThinkingTime, Points);
 
             FrameTimer = new Timer(UpdateFrame, null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
         }

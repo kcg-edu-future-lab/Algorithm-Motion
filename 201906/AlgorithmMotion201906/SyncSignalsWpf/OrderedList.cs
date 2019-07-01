@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SyncSignalsWpf
 {
@@ -8,9 +9,12 @@ namespace SyncSignalsWpf
         Func<T, TKey> _keySelector;
         Comparer<TKey> _comparer = Comparer<TKey>.Default;
 
-        public OrderedList(Func<T, TKey> keySelector)
+        public OrderedList(Func<T, TKey> keySelector, IEnumerable<T> collection = null)
         {
             _keySelector = keySelector;
+
+            if (collection != null)
+                AddRange(collection.Select(o => (key: _keySelector(o), o)).OrderBy(_ => _.key));
         }
 
         public void AddForOrder(T item)
