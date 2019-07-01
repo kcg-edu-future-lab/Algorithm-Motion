@@ -14,25 +14,16 @@
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="PointTemplate">
-            <Grid>
-                <Ellipse Width="24" Height="24" Fill="#FF5577BB" Stroke="#FFAABBCC" StrokeThickness="3" RenderTransformOrigin="0.5,0.5">
-                    <Ellipse.RenderTransform>
-                        <TransformGroup>
-                            <TranslateTransform X="180"/>
-                            <RotateTransform Angle="-90"/>
-                            <RotateTransform Angle="{Binding Angle}"/>
-                        </TransformGroup>
-                    </Ellipse.RenderTransform>
-                </Ellipse>
-                <Ellipse x:Name="SignalCircle" Width="30" Height="30" Fill="#FFFFBB77" RenderTransformOrigin="0.5,0.5" Opacity="0" Loaded="SignalCircle_Loaded">
-                    <Ellipse.RenderTransform>
-                        <TransformGroup>
-                            <TranslateTransform X="180"/>
-                            <RotateTransform Angle="-90"/>
-                            <RotateTransform Angle="{Binding Angle}"/>
-                        </TransformGroup>
-                    </Ellipse.RenderTransform>
-                </Ellipse>
+            <Grid RenderTransformOrigin="0.5,0.5">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform X="180"/>
+                        <RotateTransform Angle="-90"/>
+                        <RotateTransform Angle="{Binding Angle}"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Ellipse Width="24" Height="24" Fill="#FF5577BB" Stroke="#FFAABBCC" StrokeThickness="3"/>
+                <Ellipse Width="30" Height="30" Fill="#FFFFBB77" Opacity="0" Loaded="SignalCircle_Loaded"/>
             </Grid>
         </DataTemplate>
         <ItemsPanelTemplate x:Key="PointsPanelTemplate">
