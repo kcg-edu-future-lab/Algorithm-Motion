@@ -51,7 +51,7 @@ namespace SyncSignalsWpf
 
             Storyboard.SetTarget(frames, element);
             Storyboard.SetTargetProperty(frames, new PropertyPath(UIElement.OpacityProperty.Name));
-            frames.KeyFrames.Add(new EasingDoubleKeyFrame(opacity, TimeSpan.Zero, new CubicEase { EasingMode = EasingMode.EaseOut }));
+            frames.KeyFrames.Add(new EasingDoubleKeyFrame(opacity, TimeSpan.Zero));
             frames.KeyFrames.Add(new EasingDoubleKeyFrame(0, TimeSpan.FromSeconds(time), new CubicEase { EasingMode = EasingMode.EaseOut }));
             storyboard.Children.Add(frames);
 
