@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AutoBalanceWpf.Properties
+namespace AutoBalance1Wpf.Properties
 {
 
 

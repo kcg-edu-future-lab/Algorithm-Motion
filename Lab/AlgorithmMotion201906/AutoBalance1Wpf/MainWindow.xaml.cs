@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AutoBalanceWpf
+namespace AutoBalance1Wpf
 {
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
