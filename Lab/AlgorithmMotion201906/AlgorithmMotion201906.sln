@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncSignalsWpf", "SyncSigna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBalance1Wpf", "AutoBalance1Wpf\AutoBalance1Wpf.csproj", "{FE834BD3-72FB-4186-835D-AE1E3C16823F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBalance2Wpf", "AutoBalance2Wpf\AutoBalance2Wpf.csproj", "{171353A4-8FA9-4D09-91E5-4CF0EDE0A770}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{FE834BD3-72FB-4186-835D-AE1E3C16823F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE834BD3-72FB-4186-835D-AE1E3C16823F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE834BD3-72FB-4186-835D-AE1E3C16823F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{171353A4-8FA9-4D09-91E5-4CF0EDE0A770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{171353A4-8FA9-4D09-91E5-4CF0EDE0A770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{171353A4-8FA9-4D09-91E5-4CF0EDE0A770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{171353A4-8FA9-4D09-91E5-4CF0EDE0A770}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
