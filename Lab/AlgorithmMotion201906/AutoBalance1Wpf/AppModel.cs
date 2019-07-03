@@ -51,25 +51,9 @@ namespace AutoBalance1Wpf
 
         void UpdatePoint(PointObject p)
         {
-            var angle1 = GetAngleOnMinusSide();
-            var angle2 = GetAngleOnPlusSide();
-            p.Angle = (angle1 + angle2) / 2;
-
-            double GetAngleOnMinusSide()
-            {
-                var angle = Points[(p.Id - 1 + PointsCount) % PointsCount].Angle;
-                var angle_ = angle - 360;
-                return (Math.Abs(p.Angle - angle) < Math.Abs(p.Angle - angle_)) ?
-                    angle : angle_;
-            }
-
-            double GetAngleOnPlusSide()
-            {
-                var angle = Points[(p.Id + 1) % PointsCount].Angle;
-                var angle_ = angle + 360;
-                return (Math.Abs(p.Angle - angle) < Math.Abs(p.Angle - angle_)) ?
-                    angle : angle_;
-            }
+            p.Angle = new[] { -1, 1 }
+                .Select(i => Points[(p.Id + i).Mod(PointsCount)].Angle)
+                .Average(a => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a);
         }
     }
 }
