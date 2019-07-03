@@ -34,4 +34,13 @@ namespace AutoBalance1Wpf
 
         public override string ToString() => $"{Id}: {Angle:F3}";
     }
+
+    public static class NumberHelper
+    {
+        public static int Mod(this int i, int n)
+        {
+            var j = i % n;
+            return j >= 0 ? j : j + n;
+        }
+    }
 }

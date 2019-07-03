@@ -79,8 +79,8 @@ namespace SyncSignalsWpf
 
         TimeSpan GetAverageTime(PointObject p)
         {
-            var times = Enumerable.Range(p.Id - NeighborsCount / 2 + PointsCount, NeighborsCount)
-                .Select(id => Points[id % PointsCount].SignalTime)
+            var times = Enumerable.Range(p.Id - NeighborsCount / 2, NeighborsCount)
+                .Select(id => Points[id.Mod(PointsCount)].SignalTime)
                 .ToArray();
             return times.Any(t => t == TimeSpan.Zero) ?
                 p.SignalTime :

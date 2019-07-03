@@ -38,4 +38,13 @@ namespace SyncSignalsWpf
 
         public override string ToString() => $@"{Id}: {SignalTime:mm\:ss\.fff}";
     }
+
+    public static class NumberHelper
+    {
+        public static int Mod(this int i, int n)
+        {
+            var j = i % n;
+            return j >= 0 ? j : j + n;
+        }
+    }
 }
