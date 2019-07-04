@@ -69,11 +69,17 @@ namespace AutoBalance2Wpf
 
         void UpdatePoint(PointObject p)
         {
-            var radius = new[] { -1, 1 }
-                .Average(i => Points[(p.Id + i).Mod(PointsCount)].Position.Length);
-            var angle = new[] { -1, 1 }
-                .Select(i => Points[(p.Id + i).Mod(PointsCount)].Angle)
-                .Average(a => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a);
+            var neighbors = Points
+                .Where(q => q.Id != p.Id)
+                .OrderBy(q => (q.Position - p.Position).LengthSquared)
+                .Take(4)
+                .ToArray();
+            var radius = neighbors
+                .Average(q => q.Position.Length);
+            var angle = neighbors
+                .Select(q => q.Angle)
+                .Select(a => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a)
+                .Sum(a => 60 / (p.Angle - a)) + p.Angle;
 
             p.Position = new Vector(radius * Math.Cos(angle * Math.PI / 180), radius * Math.Sin(angle * Math.PI / 180));
         }
