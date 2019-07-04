@@ -10,7 +10,8 @@
         <DataTemplate x:Key="PointRowTemplate">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Id, StringFormat=\{0\}:}" Width="50" TextAlignment="Right"/>
-                <TextBlock Text="{Binding Position, StringFormat=\{0:F0\}}" Width="90" TextAlignment="Right" Margin="0,0,20,0"/>
+                <TextBlock Text="{Binding Position.X, StringFormat=\{0:F0\}\,}" Width="60" TextAlignment="Right"/>
+                <TextBlock Text="{Binding Position.Y, StringFormat=\{0:F0\}}" Width="50" TextAlignment="Right" Margin="0,0,20,0"/>
             </StackPanel>
         </DataTemplate>
         <DataTemplate x:Key="PointTemplate">
