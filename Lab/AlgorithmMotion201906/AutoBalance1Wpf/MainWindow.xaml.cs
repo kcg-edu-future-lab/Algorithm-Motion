@@ -56,7 +56,7 @@ namespace AutoBalance1Wpf
 
             // Storyboard.SetTarget を使えるのは FrameworkElement のとき。
             Storyboard.SetTargetName(frames, rotateTransformName);
-            Storyboard.SetTargetProperty(frames, new PropertyPath("Angle"));
+            Storyboard.SetTargetProperty(frames, new PropertyPath(RotateTransform.AngleProperty.Name));
             frames.KeyFrames.Add(frame);
             storyboard.Children.Add(frames);
 
