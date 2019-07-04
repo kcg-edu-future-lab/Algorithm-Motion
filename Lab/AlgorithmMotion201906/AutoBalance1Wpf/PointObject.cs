@@ -4,7 +4,15 @@ using System.Runtime.CompilerServices;
 
 namespace AutoBalance1Wpf
 {
-    public class PointObject : INotifyPropertyChanged
+    public abstract class NotifyBase : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void NotifyPropertyChanged([CallerMemberName]string propertyName = "") =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    public class PointObject : NotifyBase
     {
         public int Id { get; }
 
@@ -26,11 +34,6 @@ namespace AutoBalance1Wpf
             Id = id;
             _Angle = angle;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged([CallerMemberName]string propertyName = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public override string ToString() => $"{Id}: {Angle:F3}";
     }
