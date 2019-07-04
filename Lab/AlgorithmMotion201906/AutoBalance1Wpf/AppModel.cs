@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
 namespace AutoBalance1Wpf
 {
-    public class AppModel
+    public class AppModel : NotifyBase
     {
         const int PointsCount = 12;
         const double MoveInterval = 1.0;
@@ -17,6 +18,20 @@ namespace AutoBalance1Wpf
         Queue<(DateTime time, PointObject point)> TimeQueue;
 
         Timer FrameTimer;
+        Stopwatch FrameWatch = new Stopwatch();
+
+        double _ActualFrameTime;
+
+        public double ActualFrameTime
+        {
+            get { return _ActualFrameTime; }
+            set
+            {
+                if (_ActualFrameTime == value) return;
+                _ActualFrameTime = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public AppModel()
         {
@@ -37,6 +52,7 @@ namespace AutoBalance1Wpf
 
         void UpdateFrame(object state)
         {
+            FrameWatch.Restart();
             var now = DateTime.Now;
 
             var countToUpdate = TimeQueue.TakeWhile(_ => _.time < now).Count();
@@ -47,6 +63,9 @@ namespace AutoBalance1Wpf
 
                 UpdatePoint(point);
             }
+
+            FrameWatch.Stop();
+            ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
         }
 
         void UpdatePoint(PointObject p)

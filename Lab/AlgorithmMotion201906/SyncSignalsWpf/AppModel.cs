@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
 namespace SyncSignalsWpf
 {
-    public class AppModel
+    public class AppModel : NotifyBase
     {
         const int PointsCount = 12;
         const int NeighborsCount = 3;
@@ -21,6 +22,20 @@ namespace SyncSignalsWpf
 
         public DateTime StartTime { get; } = DateTime.Now;
         Timer FrameTimer;
+        Stopwatch FrameWatch = new Stopwatch();
+
+        double _ActualFrameTime;
+
+        public double ActualFrameTime
+        {
+            get { return _ActualFrameTime; }
+            set
+            {
+                if (_ActualFrameTime == value) return;
+                _ActualFrameTime = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public AppModel()
         {
@@ -42,6 +57,7 @@ namespace SyncSignalsWpf
 
         void UpdateFrame(object state)
         {
+            FrameWatch.Restart();
             var now = DateTime.Now - StartTime;
 
             var countToSignal = SignalTimes.TakeWhile(_ => _.key < now).Count();
@@ -64,6 +80,9 @@ namespace SyncSignalsWpf
                 SignalTimes.AddForOrder(point);
                 ThinkingTimes.AddForOrder(point);
             }
+
+            FrameWatch.Stop();
+            ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
         }
 
         void UpdateSignal(PointObject p)
