@@ -38,7 +38,7 @@ namespace AutoBalance2Wpf
         public PointObject(int id, Vector position)
         {
             Id = id;
-            _Position = position;
+            Position = position;
         }
 
         public override string ToString() => $"{Id}: {Position}";

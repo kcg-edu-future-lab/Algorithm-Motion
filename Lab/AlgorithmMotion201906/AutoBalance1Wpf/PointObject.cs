@@ -32,7 +32,7 @@ namespace AutoBalance1Wpf
         public PointObject(int id, double angle = 0)
         {
             Id = id;
-            _Angle = angle;
+            Angle = angle;
         }
 
         public override string ToString() => $"{Id}: {Angle:F3}";
