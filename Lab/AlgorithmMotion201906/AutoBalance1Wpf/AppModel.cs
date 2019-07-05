@@ -47,14 +47,22 @@ namespace AutoBalance1Wpf
                 .OrderBy(_ => _.time);
             TimeQueue = new Queue<(DateTime, PointObject)>(queueQuery);
 
-            FrameTimer = new Timer(UpdateFrame, null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
+            FrameTimer = new Timer(o => MeasureTime(UpdateFrame), null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
         }
 
-        void UpdateFrame(object state)
+        void MeasureTime(Action<DateTime> action)
         {
-            FrameWatch.Restart();
-            var now = DateTime.Now;
+            lock (FrameTimer)
+            {
+                FrameWatch.Restart();
+                action(DateTime.Now);
+                FrameWatch.Stop();
+                ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
+            }
+        }
 
+        void UpdateFrame(DateTime now)
+        {
             var countToUpdate = TimeQueue.TakeWhile(_ => _.time < now).Count();
             for (var i = 0; i < countToUpdate; i++)
             {
@@ -63,9 +71,6 @@ namespace AutoBalance1Wpf
 
                 UpdatePoint(point);
             }
-
-            FrameWatch.Stop();
-            ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
         }
 
         void UpdatePoint(PointObject p)
