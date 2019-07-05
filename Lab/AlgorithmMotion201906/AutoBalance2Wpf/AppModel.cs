@@ -79,7 +79,8 @@ namespace AutoBalance2Wpf
             var angle = neighbors
                 .Select(q => q.Angle)
                 .Select(a => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a)
-                .Sum(a => 60 / (p.Angle - a)) + p.Angle;
+                .Select(a => p.Angle - a)
+                .Sum(d => d == 0 ? 0 : 90 / (d + Math.Sign(d) * 3)) + p.Angle;
 
             p.Position = new Vector(radius * Math.Cos(angle * Math.PI / 180), radius * Math.Sin(angle * Math.PI / 180));
         }
