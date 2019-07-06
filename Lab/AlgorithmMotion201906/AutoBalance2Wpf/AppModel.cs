@@ -9,7 +9,8 @@ namespace AutoBalance2Wpf
 {
     public class AppModel : NotifyBase
     {
-        const int PointsCount = 24;
+        const int PointsCount = 36;
+        const int NeighborsCount = 8;
         static readonly TimeSpan MoveInterval = TimeSpan.FromSeconds(1.0);
         const double Fps = 30;
 
@@ -78,17 +79,18 @@ namespace AutoBalance2Wpf
             var neighbors = Points
                 .Where(q => q.Id != p.Id)
                 .OrderBy(q => (q.Position - p.Position).LengthSquared)
-                .Take(4)
+                .Take(NeighborsCount)
                 .ToArray();
             var radius = neighbors
                 .Average(q => q.Position.Length);
             var angle = neighbors
                 .Select(q => q.Angle)
                 .Select(a => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a)
-                .Select(a => p.Angle - a)
-                .Sum(d => d == 0 ? 0 : 90 / (d + Math.Sign(d) * 3)) + p.Angle;
+                .Sum(a => GetRepulsion(a - p.Angle)) + p.Angle;
 
             p.Position = new Vector(radius * Math.Cos(angle * Math.PI / 180), radius * Math.Sin(angle * Math.PI / 180));
+
+            double GetRepulsion(double d) => d == 0 ? 0 : -2000.0 / PointsCount / (d + Math.Sign(d) * PointsCount / 6.0);
         }
     }
 }
