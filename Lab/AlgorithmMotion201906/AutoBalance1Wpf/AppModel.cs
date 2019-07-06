@@ -9,13 +9,13 @@ namespace AutoBalance1Wpf
     public class AppModel : NotifyBase
     {
         const int PointsCount = 12;
-        const double MoveInterval = 1.0;
+        static readonly TimeSpan MoveInterval = TimeSpan.FromSeconds(1.0);
         const double Fps = 30;
 
         internal static Random Random { get; } = new Random();
 
         public PointObject[] Points { get; }
-        Queue<(DateTime time, PointObject point)> TimeQueue;
+        Queue<PointObject> MoveTimes;
 
         Timer FrameTimer;
         Stopwatch FrameWatch = new Stopwatch();
@@ -35,17 +35,17 @@ namespace AutoBalance1Wpf
 
         public AppModel()
         {
+            var now = DateTime.Now;
             Points = Enumerable.Range(0, PointsCount)
                 .Select(_ => 360 * Random.NextDouble())
                 .OrderBy(x => x)
-                .Select((x, i) => new PointObject(i, x))
+                .Select((x, i) => new PointObject(i, x)
+                {
+                    NextMoveTime = now.AddSeconds(2 + MoveInterval.TotalSeconds * Random.NextDouble()),
+                })
                 .ToArray();
 
-            var now = DateTime.Now;
-            var queueQuery = Points
-                .Select(o => (time: now.AddSeconds(2 + MoveInterval * Random.NextDouble()), point: o))
-                .OrderBy(_ => _.time);
-            TimeQueue = new Queue<(DateTime, PointObject)>(queueQuery);
+            MoveTimes = new Queue<PointObject>(Points.OrderBy(_ => _.NextMoveTime));
 
             FrameTimer = new Timer(o => MeasureTime(UpdateFrame), null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
         }
@@ -63,11 +63,12 @@ namespace AutoBalance1Wpf
 
         void UpdateFrame(DateTime now)
         {
-            var countToUpdate = TimeQueue.TakeWhile(_ => _.time < now).Count();
+            var countToUpdate = MoveTimes.TakeWhile(_ => _.NextMoveTime < now).Count();
             for (var i = 0; i < countToUpdate; i++)
             {
-                var (time, point) = TimeQueue.Dequeue();
-                TimeQueue.Enqueue((time.AddSeconds(MoveInterval), point));
+                var point = MoveTimes.Dequeue();
+                point.NextMoveTime += MoveInterval;
+                MoveTimes.Enqueue(point);
 
                 UpdatePoint(point);
             }

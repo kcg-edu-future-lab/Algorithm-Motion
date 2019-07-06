@@ -35,6 +35,8 @@ namespace AutoBalance2Wpf
 
         public double Angle { get; private set; }
 
+        public DateTime NextMoveTime { get; set; }
+
         public PointObject(int id, Vector position)
         {
             Id = id;
