@@ -52,14 +52,22 @@ namespace SyncSignalsWpf
             SignalTimes = new OrderedList<PointObject, TimeSpan>(p => p.NextSignalTime, Points);
             ThinkingTimes = new OrderedList<PointObject, TimeSpan>(p => p.NextThinkingTime, Points);
 
-            FrameTimer = new Timer(UpdateFrame, null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
+            FrameTimer = new Timer(o => MeasureTime(UpdateFrame), null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
         }
 
-        void UpdateFrame(object state)
+        void MeasureTime(Action<TimeSpan> action)
         {
-            FrameWatch.Restart();
-            var now = DateTime.Now - StartTime;
+            lock (FrameTimer)
+            {
+                FrameWatch.Restart();
+                action(DateTime.Now - StartTime);
+                FrameWatch.Stop();
+                ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
+            }
+        }
 
+        void UpdateFrame(TimeSpan now)
+        {
             var countToSignal = SignalTimes.TakeWhile(_ => _.key < now).Count();
             for (var i = 0; i < countToSignal; i++)
             {
@@ -80,9 +88,6 @@ namespace SyncSignalsWpf
                 SignalTimes.AddForOrder(point);
                 ThinkingTimes.AddForOrder(point);
             }
-
-            FrameWatch.Stop();
-            ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
         }
 
         void UpdateSignal(PointObject p)
