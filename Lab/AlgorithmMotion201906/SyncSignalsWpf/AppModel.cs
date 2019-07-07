@@ -14,8 +14,6 @@ namespace SyncSignalsWpf
         static readonly TimeSpan ThinkingOffset = TimeSpan.FromSeconds(SignalInterval.TotalSeconds / 2);
         const double Fps = 50;
 
-        internal static Random Random { get; } = new Random();
-
         public PointObject[] Points { get; }
         OrderedList<PointObject, TimeSpan> SignalTimes;
         OrderedList<PointObject, TimeSpan> ThinkingTimes;
@@ -41,7 +39,7 @@ namespace SyncSignalsWpf
         {
             var angleInterval = 360.0 / PointsCount;
             Points = Enumerable.Range(0, PointsCount)
-                .Select(_ => TimeSpan.FromSeconds(1 + SignalInterval.TotalSeconds * Random.NextDouble()))
+                .Select(_ => TimeSpan.FromSeconds(NumberHelper.NextDouble(1, 1 + SignalInterval.TotalSeconds)))
                 .Select((t, i) => new PointObject(i, i * angleInterval)
                 {
                     NextSignalTime = t,

@@ -12,8 +12,6 @@ namespace AutoBalance1Wpf
         static readonly TimeSpan MoveInterval = TimeSpan.FromSeconds(1.0);
         const double Fps = 30;
 
-        internal static Random Random { get; } = new Random();
-
         public PointObject[] Points { get; }
         Queue<PointObject> MoveTimes;
 
@@ -37,11 +35,11 @@ namespace AutoBalance1Wpf
         {
             var now = DateTime.Now;
             Points = Enumerable.Range(0, PointsCount)
-                .Select(_ => 360 * Random.NextDouble())
+                .Select(_ => 360 * NumberHelper.Random.NextDouble())
                 .OrderBy(x => x)
                 .Select((x, i) => new PointObject(i, x)
                 {
-                    NextMoveTime = now.AddSeconds(2 + MoveInterval.TotalSeconds * Random.NextDouble()),
+                    NextMoveTime = now.AddSeconds(NumberHelper.NextDouble(2, 2 + MoveInterval.TotalSeconds)),
                 })
                 .ToArray();
 

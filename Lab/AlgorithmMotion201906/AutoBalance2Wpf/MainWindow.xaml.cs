@@ -31,7 +31,7 @@ namespace AutoBalance2Wpf
             var ellipse = (Ellipse)sender;
             var point = (PointObject)ellipse.DataContext;
 
-            var (move, _, _) = CreateMoveAnimation("PositionTransform", point.Position.X, point.Position.Y, 0.5 + AppModel.Random.NextDouble());
+            var (move, _, _) = CreateMoveAnimation("PositionTransform", point.Position.X, point.Position.Y, NumberHelper.NextDouble(0.5, 1.5));
             move.Begin(ellipse);
 
             var (moveForChange, frameX, frameY) = CreateMoveAnimation("PositionTransform");

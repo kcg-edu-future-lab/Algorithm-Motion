@@ -31,7 +31,7 @@ namespace AutoBalance1Wpf
             var ellipse = (Ellipse)sender;
             var point = (PointObject)ellipse.DataContext;
 
-            var (rotate, _) = CreateRotateAnimation("AngleTransform", point.Angle, 0.5 + AppModel.Random.NextDouble());
+            var (rotate, _) = CreateRotateAnimation("AngleTransform", point.Angle, NumberHelper.NextDouble(0.5, 1.5));
             rotate.Begin(ellipse);
 
             var (rotateForChange, frame) = CreateRotateAnimation("AngleTransform");
