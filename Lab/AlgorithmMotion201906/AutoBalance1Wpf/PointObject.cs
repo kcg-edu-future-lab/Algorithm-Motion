@@ -29,7 +29,7 @@ namespace AutoBalance1Wpf
             }
         }
 
-        public DateTime NextMoveTime { get; set; }
+        public TimeSpan NextMoveTime { get; set; }
 
         public PointObject(int id, double angle = 0)
         {

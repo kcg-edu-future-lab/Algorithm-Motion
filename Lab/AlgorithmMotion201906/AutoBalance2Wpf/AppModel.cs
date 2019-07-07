@@ -17,6 +17,7 @@ namespace AutoBalance2Wpf
         public PointObject[] Points { get; }
         Queue<PointObject> MoveTimes;
 
+        public DateTime StartTime { get; } = DateTime.Now;
         Timer FrameTimer;
         Stopwatch FrameWatch = new Stopwatch();
 
@@ -35,11 +36,10 @@ namespace AutoBalance2Wpf
 
         public AppModel()
         {
-            var now = DateTime.Now;
             Points = Enumerable.Range(0, PointsCount)
                 .Select(i => new PointObject(i, new Vector(NumberHelper.NextDouble(-300, 300), NumberHelper.NextDouble(-300, 300)))
                 {
-                    NextMoveTime = now.AddSeconds(NumberHelper.NextDouble(2, 2 + MoveInterval.TotalSeconds)),
+                    NextMoveTime = TimeSpan.FromSeconds(NumberHelper.NextDouble(2, 2 + MoveInterval.TotalSeconds)),
                 })
                 .ToArray();
 
@@ -48,18 +48,18 @@ namespace AutoBalance2Wpf
             FrameTimer = new Timer(o => MeasureTime(UpdateFrame), null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
         }
 
-        void MeasureTime(Action<DateTime> action)
+        void MeasureTime(Action<TimeSpan> action)
         {
             lock (FrameTimer)
             {
                 FrameWatch.Restart();
-                action(DateTime.Now);
+                action(DateTime.Now - StartTime);
                 FrameWatch.Stop();
                 ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
             }
         }
 
-        void UpdateFrame(DateTime now)
+        void UpdateFrame(TimeSpan now)
         {
             var countToUpdate = MoveTimes.TakeWhile(_ => _.NextMoveTime < now).Count();
             for (var i = 0; i < countToUpdate; i++)
