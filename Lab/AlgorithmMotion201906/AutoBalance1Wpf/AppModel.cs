@@ -36,7 +36,7 @@ namespace AutoBalance1Wpf
         public AppModel()
         {
             Points = Enumerable.Range(0, PointsCount)
-                .Select(_ => 360 * NumberHelper.Random.NextDouble())
+                .Select(_ => NumberHelper.NextDouble(0, 360))
                 .OrderBy(x => x)
                 .Select((x, i) => new PointObject(i, x)
                 {
