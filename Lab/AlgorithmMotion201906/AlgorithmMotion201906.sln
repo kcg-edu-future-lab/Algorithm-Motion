@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBalance1Wpf", "AutoBala
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBalance2Wpf", "AutoBalance2Wpf\AutoBalance2Wpf.csproj", "{171353A4-8FA9-4D09-91E5-4CF0EDE0A770}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgoMotionLib", "AlgoMotionLib\AlgoMotionLib.csproj", "{183FB97A-80AE-48B0-96E7-5C03442EE88F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlgoMotionLib", "AlgoMotionLib\AlgoMotionLib.csproj", "{183FB97A-80AE-48B0-96E7-5C03442EE88F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FillBalance2Wpf", "FillBalance2Wpf\FillBalance2Wpf.csproj", "{48079773-856F-47C0-A679-82C6E4FAA7EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{183FB97A-80AE-48B0-96E7-5C03442EE88F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{183FB97A-80AE-48B0-96E7-5C03442EE88F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{183FB97A-80AE-48B0-96E7-5C03442EE88F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48079773-856F-47C0-A679-82C6E4FAA7EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48079773-856F-47C0-A679-82C6E4FAA7EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48079773-856F-47C0-A679-82C6E4FAA7EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48079773-856F-47C0-A679-82C6E4FAA7EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
