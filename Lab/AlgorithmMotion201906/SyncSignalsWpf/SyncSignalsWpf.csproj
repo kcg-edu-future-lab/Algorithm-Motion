@@ -97,5 +97,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlgoMotionLib\AlgoMotionLib.csproj">
+      <Project>{183fb97a-80ae-48b0-96e7-5c03442ee88f}</Project>
+      <Name>AlgoMotionLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
