@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using AlgoMotionLib;
 
 namespace AutoBalance2Wpf
 {

@@ -1,17 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using AlgoMotionLib;
 
 namespace SyncSignalsWpf
 {
-    public abstract class NotifyBase : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged([CallerMemberName]string propertyName = "") =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
     public class PointObject : NotifyBase
     {
         public int Id { get; }
@@ -40,21 +31,5 @@ namespace SyncSignalsWpf
         }
 
         public override string ToString() => $@"{Id}: {SignalTime:mm\:ss\.fff}";
-    }
-
-    public static class NumberHelper
-    {
-        internal static Random Random { get; } = new Random();
-
-        public static double NextDouble(double minValue, double maxValue)
-        {
-            return minValue + (maxValue - minValue) * Random.NextDouble();
-        }
-
-        public static int Mod(this int i, int n)
-        {
-            var j = i % n;
-            return j >= 0 ? j : j + n;
-        }
     }
 }

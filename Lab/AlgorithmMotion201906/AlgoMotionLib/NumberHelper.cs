@@ -4,7 +4,7 @@ namespace AlgoMotionLib
 {
     public static class NumberHelper
     {
-        internal static Random Random { get; } = new Random();
+        public static Random Random { get; } = new Random();
 
         public static double NextDouble(double minValue, double maxValue)
         {
