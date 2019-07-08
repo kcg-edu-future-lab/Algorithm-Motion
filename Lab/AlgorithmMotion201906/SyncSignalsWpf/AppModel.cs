@@ -11,7 +11,7 @@ namespace SyncSignalsWpf
         const int NeighborsCount = 3;
         static readonly TimeSpan SignalInterval = TimeSpan.FromSeconds(1.0);
         static readonly TimeSpan ThinkingOffset = TimeSpan.FromSeconds(SignalInterval.TotalSeconds / 2);
-        const double Fps = 50;
+        static readonly TimeSpan TimerInterval = TimeSpan.FromSeconds(1.0 / 50);
 
         public PointObject[] Points { get; }
         OrderedList<PointObject, TimeSpan> SignalTimes;
@@ -34,7 +34,7 @@ namespace SyncSignalsWpf
             SignalTimes = new OrderedList<PointObject, TimeSpan>(p => p.NextSignalTime, Points);
             ThinkingTimes = new OrderedList<PointObject, TimeSpan>(p => p.NextThinkingTime, Points);
 
-            FrameTimer = new FrameTimer(UpdateFrame, TimeSpan.FromSeconds(1 / Fps));
+            FrameTimer = new FrameTimer(UpdateFrame, TimerInterval);
         }
 
         void UpdateFrame(TimeSpan now)

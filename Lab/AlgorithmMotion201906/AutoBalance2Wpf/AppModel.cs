@@ -11,7 +11,7 @@ namespace AutoBalance2Wpf
         const int PointsCount = 36;
         const int NeighborsCount = 8;
         static readonly TimeSpan MoveInterval = TimeSpan.FromSeconds(1.0);
-        const double Fps = 30;
+        static readonly TimeSpan TimerInterval = TimeSpan.FromSeconds(1.0 / 30);
 
         public PointObject[] Points { get; }
         Queue<PointObject> MoveTimes;
@@ -29,7 +29,7 @@ namespace AutoBalance2Wpf
 
             MoveTimes = new Queue<PointObject>(Points.OrderBy(_ => _.NextMoveTime));
 
-            FrameTimer = new FrameTimer(UpdateFrame, TimeSpan.FromSeconds(1 / Fps));
+            FrameTimer = new FrameTimer(UpdateFrame, TimerInterval);
         }
 
         void UpdateFrame(TimeSpan now)
