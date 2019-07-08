@@ -76,7 +76,9 @@ namespace AutoBalance1Wpf
         {
             p.Angle = new[] { -1, 1 }
                 .Select(i => Points[(p.Id + i).Mod(PointsCount)].Angle)
-                .Average(a => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a);
+                .Average(a => CorrectAngle(a));
+
+            double CorrectAngle(double a) => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a;
         }
     }
 }

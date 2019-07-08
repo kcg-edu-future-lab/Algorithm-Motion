@@ -43,7 +43,7 @@ namespace AutoBalance2Wpf
             Position = position;
         }
 
-        public override string ToString() => $"{Id}: {Position}";
+        public override string ToString() => $"{Id}: {Position:F3}";
     }
 
     public static class NumberHelper

@@ -81,13 +81,14 @@ namespace AutoBalance2Wpf
                 .ToArray();
             var radius = neighbors
                 .Average(q => q.Position.Length);
-            var angle = neighbors
+            var angle = p.Angle + neighbors
                 .Select(q => q.Angle)
-                .Select(a => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a)
-                .Sum(a => GetRepulsion(a - p.Angle)) + p.Angle;
+                .Select(CorrectAngle)
+                .Sum(a => GetRepulsion(a - p.Angle));
 
             p.Position = new Vector(radius * Math.Cos(angle * Math.PI / 180), radius * Math.Sin(angle * Math.PI / 180));
 
+            double CorrectAngle(double a) => a > p.Angle + 180 ? a - 360 : a < p.Angle - 180 ? a + 360 : a;
             double GetRepulsion(double d) => d == 0 ? 0 : -2000.0 / PointsCount / (d + Math.Sign(d) * PointsCount / 6.0);
         }
     }
