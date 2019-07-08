@@ -40,7 +40,7 @@
         <Viewbox>
             <ItemsControl ItemsSource="{Binding Points}" ItemTemplate="{DynamicResource PointTemplate}" ItemsPanel="{DynamicResource PointsPanelTemplate}" Height="540" Width="540"/>
         </Viewbox>
-        <TextBlock Text="{Binding ActualFrameTime, StringFormat=\{0:F3\} ms / Frame}" Width="200" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10" TextAlignment="Right"/>
+        <TextBlock Text="{Binding FrameTimer.ActualFrameTime, StringFormat=\{0:F3\} ms / Frame}" Width="200" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10" TextAlignment="Right"/>
         <ScrollViewer Grid.Column="1" VerticalAlignment="Center" VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding Points}" ItemTemplate="{DynamicResource PointRowTemplate}" HorizontalAlignment="Center" Margin="0,15"/>
         </ScrollViewer>

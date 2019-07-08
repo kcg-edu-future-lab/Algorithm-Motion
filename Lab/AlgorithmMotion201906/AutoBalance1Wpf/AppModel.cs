@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using AlgoMotionLib;
 
 namespace AutoBalance1Wpf
@@ -16,22 +14,7 @@ namespace AutoBalance1Wpf
         public PointObject[] Points { get; }
         Queue<PointObject> MoveTimes;
 
-        public DateTime StartTime { get; } = DateTime.Now;
-        Timer FrameTimer;
-        Stopwatch FrameWatch = new Stopwatch();
-
-        double _ActualFrameTime;
-
-        public double ActualFrameTime
-        {
-            get { return _ActualFrameTime; }
-            set
-            {
-                if (_ActualFrameTime == value) return;
-                _ActualFrameTime = value;
-                NotifyPropertyChanged();
-            }
-        }
+        public FrameTimer FrameTimer { get; }
 
         public AppModel()
         {
@@ -46,18 +29,7 @@ namespace AutoBalance1Wpf
 
             MoveTimes = new Queue<PointObject>(Points.OrderBy(_ => _.NextMoveTime));
 
-            FrameTimer = new Timer(o => MeasureTime(UpdateFrame), null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
-        }
-
-        void MeasureTime(Action<TimeSpan> action)
-        {
-            lock (FrameTimer)
-            {
-                FrameWatch.Restart();
-                action(DateTime.Now - StartTime);
-                FrameWatch.Stop();
-                ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
-            }
+            FrameTimer = new FrameTimer(UpdateFrame, TimeSpan.FromSeconds(1 / Fps));
         }
 
         void UpdateFrame(TimeSpan now)

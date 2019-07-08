@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using AlgoMotionLib;
 
 namespace SyncSignalsWpf
@@ -19,22 +17,7 @@ namespace SyncSignalsWpf
         OrderedList<PointObject, TimeSpan> SignalTimes;
         OrderedList<PointObject, TimeSpan> ThinkingTimes;
 
-        public DateTime StartTime { get; } = DateTime.Now;
-        Timer FrameTimer;
-        Stopwatch FrameWatch = new Stopwatch();
-
-        double _ActualFrameTime;
-
-        public double ActualFrameTime
-        {
-            get { return _ActualFrameTime; }
-            set
-            {
-                if (_ActualFrameTime == value) return;
-                _ActualFrameTime = value;
-                NotifyPropertyChanged();
-            }
-        }
+        public FrameTimer FrameTimer { get; }
 
         public AppModel()
         {
@@ -51,18 +34,7 @@ namespace SyncSignalsWpf
             SignalTimes = new OrderedList<PointObject, TimeSpan>(p => p.NextSignalTime, Points);
             ThinkingTimes = new OrderedList<PointObject, TimeSpan>(p => p.NextThinkingTime, Points);
 
-            FrameTimer = new Timer(o => MeasureTime(UpdateFrame), null, TimeSpan.Zero, TimeSpan.FromSeconds(1 / Fps));
-        }
-
-        void MeasureTime(Action<TimeSpan> action)
-        {
-            lock (FrameTimer)
-            {
-                FrameWatch.Restart();
-                action(DateTime.Now - StartTime);
-                FrameWatch.Stop();
-                ActualFrameTime = FrameWatch.Elapsed.TotalMilliseconds;
-            }
+            FrameTimer = new FrameTimer(UpdateFrame, TimeSpan.FromSeconds(1 / Fps));
         }
 
         void UpdateFrame(TimeSpan now)
