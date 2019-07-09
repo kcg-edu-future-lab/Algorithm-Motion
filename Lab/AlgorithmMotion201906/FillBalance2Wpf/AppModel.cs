@@ -10,6 +10,7 @@ namespace FillBalance2Wpf
     {
         const int PointsCount = 36;
         const int NeighborsCount = 18;
+        const int MaxSize = 270;
         static readonly TimeSpan MoveInterval = TimeSpan.FromSeconds(1.0);
         static readonly TimeSpan TimerInterval = TimeSpan.FromSeconds(1.0 / 30);
 
@@ -21,7 +22,7 @@ namespace FillBalance2Wpf
         public AppModel()
         {
             Points = Enumerable.Range(0, PointsCount)
-                .Select(i => new PointObject(i, new Vector(NumberHelper.NextDouble(-300, 300), NumberHelper.NextDouble(-300, 300)))
+                .Select(i => new PointObject(i, new Vector(NumberHelper.NextDouble(-MaxSize, MaxSize), NumberHelper.NextDouble(-MaxSize, MaxSize)))
                 {
                     NextMoveTime = TimeSpan.FromSeconds(NumberHelper.NextDouble(2, 2 + MoveInterval.TotalSeconds)),
                 })
@@ -54,9 +55,15 @@ namespace FillBalance2Wpf
                 .Select(q => q.Position)
                 .ToArray();
 
-            p.Position += Sum(neighbors.Select(q => GetRepulsion(q - p.Position)));
+            var walls = new[]
+            {
+                new Vector(Math.Sign(p.Position.X) * MaxSize, p.Position.Y),
+                new Vector(p.Position.X, Math.Sign(p.Position.Y) * MaxSize),
+            };
 
-            Vector GetRepulsion(Vector d) => d.Length == 0 ? d : (-200.0 / PointsCount / (d.Length + PointsCount / 10.0)) * d;
+            p.Position += Sum(neighbors.Concat(walls).Select(q => GetRepulsion(q - p.Position)));
+
+            Vector GetRepulsion(Vector d) => d.LengthSquared == 0 ? d : -40000.0 / PointsCount / (d.LengthSquared + PointsCount / 20.0) * d;
             Vector Sum(IEnumerable<Vector> source) => source.Aggregate((x, y) => x + y);
         }
     }
