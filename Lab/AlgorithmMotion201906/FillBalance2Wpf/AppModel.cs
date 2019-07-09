@@ -47,9 +47,17 @@ namespace FillBalance2Wpf
 
         void UpdatePoint(PointObject p)
         {
-            throw new NotImplementedException();
+            var neighbors = Points
+                .Where(q => q.Id != p.Id)
+                .OrderBy(q => (q.Position - p.Position).LengthSquared)
+                .Take(NeighborsCount)
+                .Select(q => q.Position)
+                .ToArray();
 
-            double GetRepulsion(double d) => d == 0 ? 0 : -2000.0 / PointsCount / (d + Math.Sign(d) * PointsCount / 6.0);
+            p.Position += Sum(neighbors.Select(q => GetRepulsion(q - p.Position)));
+
+            Vector GetRepulsion(Vector d) => d.Length == 0 ? d : (-200.0 / PointsCount / (d.Length + PointsCount / 10.0)) * d;
+            Vector Sum(IEnumerable<Vector> source) => source.Aggregate((x, y) => x + y);
         }
     }
 }
