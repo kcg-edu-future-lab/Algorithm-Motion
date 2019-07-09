@@ -5,8 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FillBalance2Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Fill Balance 2" Height="600" Width="800" FontSize="20" FontFamily="Century Gothic" Background="#FF181818" Foreground="#FFDDDDDD" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <DataTemplate x:Key="PointRowTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Id, StringFormat=\{0\}:}" Width="50" TextAlignment="Right"/>
+                <TextBlock Text="{Binding Position.X, StringFormat=\{0:F0\}\,}" Width="60" TextAlignment="Right"/>
+                <TextBlock Text="{Binding Position.Y, StringFormat=\{0:F0\}}" Width="50" TextAlignment="Right" Margin="0,0,20,0"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="PointTemplate">
+            <Grid>
+                <Ellipse Width="24" Height="24" Fill="#FF5577BB" Stroke="#FFAABBCC" StrokeThickness="3" RenderTransformOrigin="0.5,0.5" Loaded="Circle_Loaded">
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <TranslateTransform x:Name="PositionTransform"/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+            </Grid>
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="PointsPanelTemplate">
+            <Canvas Height="24" IsItemsHost="True" Width="24"/>
+        </ItemsPanelTemplate>
+    </Window.Resources>
+    <Window.DataContext>
+        <local:AppModel/>
+    </Window.DataContext>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="240"/>
+        </Grid.ColumnDefinitions>
+        <Viewbox>
+            <ItemsControl ItemsSource="{Binding Points}" ItemTemplate="{DynamicResource PointTemplate}" ItemsPanel="{DynamicResource PointsPanelTemplate}" Height="540" Width="540"/>
+        </Viewbox>
+        <TextBlock Text="{Binding FrameTimer.ActualFrameTime, StringFormat=\{0:F3\} ms / Frame}" Width="200" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10" TextAlignment="Right"/>
+        <ScrollViewer Grid.Column="1" VerticalAlignment="Center" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Points}" ItemTemplate="{DynamicResource PointRowTemplate}" HorizontalAlignment="Center" Margin="0,15"/>
+        </ScrollViewer>
     </Grid>
 </Window>
