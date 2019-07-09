@@ -52,19 +52,22 @@ namespace FillBalance2Wpf
                 .Where(q => q.Id != p.Id)
                 .OrderBy(q => (q.Position - p.Position).LengthSquared)
                 .Take(NeighborsCount)
-                .Select(q => q.Position)
+                .Select(q => q.Position - p.Position)
                 .ToArray();
 
             var walls = new[]
             {
-                new Vector(Math.Sign(p.Position.X) * MaxSize, p.Position.Y),
-                new Vector(p.Position.X, Math.Sign(p.Position.Y) * MaxSize),
+                new Vector(Math.Sign(p.Position.X) * MaxSize - p.Position.X, 0) / 2,
+                new Vector(0, Math.Sign(p.Position.Y) * MaxSize - p.Position.Y) / 2,
             };
 
-            p.Position += Sum(neighbors.Concat(walls).Select(q => GetRepulsion(q - p.Position)));
+            var position = p.Position + Sum(neighbors.Concat(walls).Select(GetRepulsion));
+            p.Position = CorrectY(CorrectX(position));
 
-            Vector GetRepulsion(Vector d) => d.LengthSquared == 0 ? d : -40000.0 / PointsCount / (d.LengthSquared + PointsCount / 20.0) * d;
+            Vector GetRepulsion(Vector d) => d.LengthSquared == 0 ? d : -50000.0 / PointsCount / (d.LengthSquared + 10) * d;
             Vector Sum(IEnumerable<Vector> source) => source.Aggregate((x, y) => x + y);
+            Vector CorrectX(Vector v) => Math.Abs(v.X) >= MaxSize ? new Vector(Math.Sign(v.X) * (MaxSize - 3), v.Y) : v;
+            Vector CorrectY(Vector v) => Math.Abs(v.Y) >= MaxSize ? new Vector(v.X, Math.Sign(v.Y) * (MaxSize - 3)) : v;
         }
     }
 }
